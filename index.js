@@ -82,6 +82,9 @@ module.exports = function (opts) {
         // wrap it in layout
         var markup = jade.compile(templateCache.layout)(opts)
 
+        if (file.path){
+            file.path = path.dirname(file.path) + '/index.html';
+        }
         file.contents = new Buffer(markup)
         return cb(null,file)
     };

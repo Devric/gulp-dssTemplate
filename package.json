@@ -1,12 +1,12 @@
 {
-  "name": "zues-styledoc",
+  "name": "gulp-dssTemplate",
   "version": "1.0.0",
-  "description": "",
+  "description": "transform dss object into jade template",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
+  "author": "Devric",
   "license": "ISC",
   "dependencies": {
     "dss": "^1.0.4",

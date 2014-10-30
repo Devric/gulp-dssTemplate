@@ -1,0 +1,22 @@
+{
+  "name": "zues-styledoc",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dss": "^1.0.4",
+    "gulp-util": "^3.0.1",
+    "jade": "^1.7.0",
+    "through2": "^0.6.3"
+  },
+  "devDependencies": {
+    "chai": "^1.9.2",
+    "gulp": "^3.8.9",
+    "mocha": "^2.0.1"
+  }
+}

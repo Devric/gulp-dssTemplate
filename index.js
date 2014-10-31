@@ -1,11 +1,12 @@
 'use strict';
 
-var through   = require('through2');
-var gutil     = require('gulp-util')
-var jade      = require('jade')
-var util      = require('util')
-var fs        = require('fs')
-var path      = require('path')
+var through = require('through2');
+var gutil   = require('gulp-util')
+var jade    = require('jade')
+var fs      = require('fs')
+var path    = require('path')
+var _       = require('lodash')
+
 
 var PLUGIN_NAME = 'gulp-dssTemplate';
 
@@ -15,7 +16,6 @@ module.exports = function (opts) {
         return
     }
     var tmpDir         = opts.templateDir
-      , sectionsMarkup = []
 
     //
     // cache all template in template directory
@@ -48,38 +48,59 @@ module.exports = function (opts) {
         if (file.isNull()) return;
         if (file.isStream()) return this.emit('error', new gutil.PluginError(PLUGIN_NAME, 'Stream not supported'));
 
+        //
         // Get dssObj from buffer
         var dssObj = JSON.parse(file.contents)
-          , orderedSection = {}
 
-        // ordering sections
+        //
+        // merging into sections
+        var mergedSection = {}
+        // @returns mergedSection = { 'key' : { content: arr, index: int } }
         dssObj.blocks.forEach(function(data){
             // if missing section, give default
             data.section = data.section ? data.section : 'default'
 
             // reorder sections
-            if (orderedSection[data.section]) {
-                orderedSection[data.section].push(data)
+            if (mergedSection[data.section]) {
+                // push to section
+                mergedSection[data.section].content.push(data)
             } else {
-                orderedSection[data.section] = []
-                orderedSection[data.section].push(data)
+                // add new section
+                mergedSection[data.section] = {}
+                mergedSection[data.section].content = []
+                mergedSection[data.section].index = data.index ?  data.index : 0
+                mergedSection[data.section].content.push(data)
             }
-
         })
 
+        //
+        // flaten into array
+        var groupSections = []
+        for (var key in mergedSection) {
+            var obj = mergedSection[key]
+            obj.section = key
+            groupSections.push( obj )
+        }
+
+        groupSections = _.sortBy(groupSections, 'index')
+
+        //
         // render into section templateCache
-        for (var key in orderedSection) {
-            orderedSection[key].forEach(function(data){
+        var sectionsMarkup = []
+        groupSections.forEach(function(sectionData){
+            sectionData.content.forEach(function(data){
                 var tpl = data.template ? templateCache[data.template] : templateCache['section']
                 var markup = jade.compile(tpl)(data) 
                 sectionsMarkup.push(markup)
             })
-        }
+        })
 
+        //
         // put it back with other options
         opts.contents = sectionsMarkup.join('\n')
 
-        // wrap it in layout
+        //
+        // wrap it in layout and render full markup
         var markup = jade.compile(templateCache.layout)(opts)
 
         if (file.path){

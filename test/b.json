@@ -2,6 +2,7 @@
     "blocks": [
         {
         "section"     : "Button",
+        "index"       : "2",
         "name"        : "Cool Rounded Buttons",
         "template"    : "fun",
         "description" : "Your standard form button.",
@@ -35,6 +36,7 @@
     {
         "section" : "link",
         "name": "black Buttons",
+        "index"       : "1",
         "description": "Your standard form button.",
         "state": [
             { 

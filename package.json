@@ -12,6 +12,7 @@
     "dss": "^1.0.4",
     "gulp-util": "^3.0.1",
     "jade": "^1.7.0",
+    "lodash": "^2.4.1",
     "through2": "^0.6.3"
   },
   "devDependencies": {
